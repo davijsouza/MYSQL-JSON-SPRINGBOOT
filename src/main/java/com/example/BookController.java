@@ -1,7 +1,11 @@
 package com.example;
 
+import java.util.List;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +26,16 @@ public class BookController {
 	@GetMapping("/getData")
 	public Iterable<Book> getData() {
 		return repository.findAll();
+	}
+	
+	@GetMapping("/name/{name}")
+	public List<Book> getName(@PathVariable("name") String name) {
+		return repository.findCustumRolesByName(name);
+	}
+	
+	@GetMapping("/publisher/{publisher}")
+	public List<Book> getTitle(@PathVariable("publisher") String publisher) {
+		return repository.findCustumRolesByPublisher(publisher);
 	}
 
 	@PostMapping("/addData")
