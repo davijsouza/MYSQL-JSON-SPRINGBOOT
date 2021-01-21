@@ -22,6 +22,7 @@ public class BookController {
 
 	@Autowired
 	private BookRepository repository;
+	
 
 	@GetMapping("/getData")
 	public Iterable<Book> getData() {
@@ -31,6 +32,11 @@ public class BookController {
 	@GetMapping("/name/{name}")
 	public List<Book> getName(@PathVariable("name") String name) {
 		return repository.findCustumRolesByName(name);
+	}
+	
+	@GetMapping("/custum")
+	public List<Book> getCustum() {
+		return repository.findAllproperties();
 	}
 	
 	@GetMapping("/publisher/{publisher}")
