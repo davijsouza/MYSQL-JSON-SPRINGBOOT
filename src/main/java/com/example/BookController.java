@@ -1,6 +1,8 @@
 package com.example;
 
+
 import java.util.List;
+import java.util.Map;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +25,17 @@ public class BookController {
 	@Autowired
 	private BookRepository repository;
 	
+	@Autowired
+	private BookService bookservice;
 
 	@GetMapping("/getData")
 	public Iterable<Book> getData() {
 		return repository.findAll();
+	}
+	
+	@GetMapping("/getKey")
+	public  Map<String, String> getColumn() {
+		return repository.findPropertiesKeyPublisher();
 	}
 	
 	@GetMapping("/name/{name}")
@@ -58,6 +67,19 @@ public class BookController {
 		book.setId(bookId);
 		book = repository.save(book);
 		return ResponseEntity.ok(book);
+	}
+	
+	@PutMapping("/update")
+	public ResponseEntity<Book> update(@RequestBody Book book){
+
+		List<Book> list = bookservice.BookUpdateServiceByPublisher(book);
+		if (!list.isEmpty()) {
+			book.setId(list.get(0).getId());
+			book = repository.save(book);
+			return ResponseEntity.ok(book);
+		}
+		return ResponseEntity.notFound().build();
+
 	}
 	
 	@DeleteMapping("/{bookId}")

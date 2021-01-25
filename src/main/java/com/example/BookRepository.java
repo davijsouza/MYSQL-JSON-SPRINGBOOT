@@ -2,7 +2,7 @@ package com.example;
 
 
 import java.util.List;
-
+import java.util.Map;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -21,6 +21,8 @@ public interface BookRepository extends JpaRepository<Book, Long>{
 	@Query(value = "SELECT id, JSON_OBJECT('publisher', properties->>'$.publisher') as properties FROM book b WHERE JSON_EXTRACT(b.properties, '$.publisher') = 'Amazon'", nativeQuery = true)
 	List<Book> findAllproperties();
 		
+	@Query(value = "SELECT properties->>'$.publisher' as publisher FROM book b WHERE JSON_EXTRACT(b.properties, '$.publisher') = 'Azure'", nativeQuery = true)
+	Map<String, String> findPropertiesKeyPublisher();
 	
 	
 }

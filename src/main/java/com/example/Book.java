@@ -26,7 +26,7 @@ public class Book {
  
     @Type(type = "json")
     @Column(columnDefinition = "json")
-    private Map<String, String> properties = new HashMap<>();
+    private Map<String, String> properties = new HashMap<String, String>();
    
     public Long getId() {
 		return id;
