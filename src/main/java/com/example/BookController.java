@@ -2,7 +2,6 @@ package com.example;
 
 
 import java.util.List;
-import java.util.Map;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,30 +27,26 @@ public class BookController {
 	@Autowired
 	private BookService bookservice;
 
-	@GetMapping("/getData")
-	public Iterable<Book> getData() {
-		return repository.findAll();
+	@GetMapping("/findAll")
+	public Iterable<Book> findAll() {
+		return bookservice.findAllService();
 	}
 	
-	@GetMapping("/getKey")
-	public  Map<String, String> getColumn() {
-		return repository.findPropertiesKeyPublisher();
+	@GetMapping("/findAllJson")
+	public List<Book> findAllJsonObject() {
+		return repository.findAllJsonObject();
 	}
 	
-	@GetMapping("/name/{name}")
-	public List<Book> getName(@PathVariable("name") String name) {
-		return repository.findCustumRolesByName(name);
+	@GetMapping("/key/{key}/value/{value}")
+	public  List<Book> findAllByKeyAndValue(@PathVariable("key") String key, @PathVariable("value") String value) {
+		return repository.findAllJsonKeyAndValue(key, value);
 	}
 	
-	@GetMapping("/custum")
-	public List<Book> getCustum() {
-		return repository.findAllproperties();
+	@GetMapping("/value/{value}")
+	public  List<Book> findAllByValue(@PathVariable("value") String value) {
+		return repository.findAllJsonValue(value);
 	}
 	
-	@GetMapping("/publisher/{publisher}")
-	public List<Book> getTitle(@PathVariable("publisher") String publisher) {
-		return repository.findCustumRolesByPublisher(publisher);
-	}
 
 	@PostMapping("/addData")
 	@ResponseStatus(HttpStatus.CREATED)
@@ -69,17 +64,19 @@ public class BookController {
 		return ResponseEntity.ok(book);
 	}
 	
-	@PutMapping("/update")
-	public ResponseEntity<Book> update(@RequestBody Book book){
+	@PutMapping("/updateJsonBy")
+	public ResponseEntity<Book> update(@RequestBody Book book) {
 
-		List<Book> list = bookservice.BookUpdateServiceByPublisher(book);
-		if (!list.isEmpty()) {
-			book.setId(list.get(0).getId());
-			book = repository.save(book);
-			return ResponseEntity.ok(book);
+		List<Book> result = bookservice.updateServiceJsonById(book);
+		if (result.isEmpty()) {
+			return ResponseEntity.notFound().build();
+		} else if (result.size() > 1) {
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		}
-		return ResponseEntity.notFound().build();
 
+		book.setId(result.get(0).getId());
+		book = repository.save(book);
+		return ResponseEntity.ok(book);
 	}
 	
 	@DeleteMapping("/{bookId}")

@@ -16,9 +16,14 @@ public class BookService {
 		this.repository = repository;
 	}
 	
-	public List<Book> BookUpdateServiceByPublisher(Book entity) {
+	public Iterable<Book> findAllService() {
+		return repository.findAll();
+	}
+	
+	
+	public List<Book> updateServiceJsonById(Book entity) {
 		Map<String, String> properties = entity.getProperties();	
-		return repository.findCustumRolesByPublisher(properties.get("publisher"));	
+		return repository.findJsonById(properties.get("id"));	
 	}
 	
 	
